@@ -1,0 +1,5 @@
+php:
+  build: ./php/
+  volumes:
+   - ./../:/project/
+  command: update

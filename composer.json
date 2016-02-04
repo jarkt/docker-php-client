@@ -1,0 +1,11 @@
+{
+	"name": "jarkt/docker-php-client",
+	"autoload": {
+		"psr-4": {
+			"jarkt\\docker\\": "src/"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "5.1.*"
+	}
+}
