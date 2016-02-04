@@ -1,0 +1,10 @@
+php:
+  build: ./php/
+  volumes:
+   - ./../:/project/
+  links:
+   - api
+api:
+  image: jarkt/docker-remote-api
+  volumes:
+   - /var/run/docker.sock:/var/run/docker.sock
