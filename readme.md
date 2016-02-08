@@ -21,7 +21,7 @@ First create an instance of the ApiClient.
 ```
 
 Example:
-```
+```php
 $docker = new ApiClient(getenv('API_PORT_2375_TCP_ADDR'), getenv('API_PORT_2375_TCP_PORT'), 'v1.21');
 ```
 (Haha, like 1.21 Gigawatt :-)
@@ -29,26 +29,28 @@ $docker = new ApiClient(getenv('API_PORT_2375_TCP_ADDR'), getenv('API_PORT_2375_
 You can use various types of request methods to perform your API call. There are get, head, delete, post and put.
 The signatures are the same:
 
-* `method ($path [, array $params [, requestHandlers\RequestHandler $requestHandler ]] )`
+```
+method ($path [, array $params [, requestHandlers\RequestHandler $requestHandler ]] )
+```
 
-For your call you have to serve the request path and optional an array of request parameters. Some requests require some
+For your call you have to serve the request path and optional an array of request parameters. Some requests require
 data in the request body - for these you can also give an instance of an implementation of a requestHandlers\RequestHandler.
 These implementation prepares a certain data type for the http api request.
 
 Here are some examples:
-```
+```php
 $response = $docker->get('/containers/json');
 ```
 
-```
+```php
 $response = $docker->head('/containers/4fa6e0f0c678/archive', ['path' => '/path/on/container']);
 ```
 
-```
+```php
 $response = $docker->post('/containers/create', [], new requestHandlers\Json(['Image' => '4fa6e0f0c678']));
 ```
 
-```
+```php
 $response = $docker->put(
 	'/containers/4fa6e0f0c678/archive',
 	['path' => '/path/on/container'],
@@ -61,7 +63,7 @@ Use a responseHandler\ResponseHandler to get informations from the response or t
 like unpacking a tar archive.
 
 Here are some examples:
-```
+```php
 $response = $docker->get('/containers/json');
 if($response->getStatus() === 200) {
 	$responseHandler = new responseHandlers\Json($response);
@@ -70,7 +72,7 @@ if($response->getStatus() === 200) {
 }
 ```
 
-```
+```php
 $response = $docker->get('/containers/4fa6e0f0c678/archive', ['path' => '/path/on/container']);
 if($response->getStatus() === 200) {
 	$responseHandler = new responseHandlers\Files($response);
