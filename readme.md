@@ -2,7 +2,7 @@
 
 ## Installation
 Install via composer:
-```
+```json
 {
 	"require": {
 		"jarkt/docker-php-client": "0.9.*"
