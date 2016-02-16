@@ -12,9 +12,9 @@ class Json extends RequestHandler
 
 	/**
 	 * Json constructor.
-	 * @param $data
+	 * @param array|null $data
 	 */
-	public function __construct($data)
+	public function __construct(array $data = null)
 	{
 		$this->data = $data;
 	}

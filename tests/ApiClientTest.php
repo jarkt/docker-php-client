@@ -136,7 +136,10 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 	public function testJsonRequest(ApiClient $docker, array $currentContainer)
 	{
 		$response = $docker->post('/containers/create', [], new requestHandlers\Json([
-			'Image' => $currentContainer['Image']
+			'Image' => $currentContainer['Image'],
+			'HostConfig' => [
+				'VolumesFrom' => [$currentContainer['Id']]
+			]
 		]));
 
 		$responseHandler = new responseHandlers\Json($response);
@@ -150,9 +153,19 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 	 * @depends testConnect
 	 * @depends testJsonRequest
 	 */
+	public function testEmptyJsonRequest(ApiClient $docker, $containerId)
+	{
+		$response = $docker->post("/containers/$containerId/start");
+		$this->assertEquals(204, $response->getStatus());
+	}
+
+	/**
+	 * @depends testConnect
+	 * @depends testJsonRequest
+	 */
 	public function testDeleteRequest(ApiClient $docker, $containerId)
 	{
-		$response = $docker->delete("/containers/$containerId");
+		$response = $docker->delete("/containers/$containerId", ['force' => true]);
 
 		$this->assertEquals(204, $response->getStatus());
 	}
