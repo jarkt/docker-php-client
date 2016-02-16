@@ -4,12 +4,8 @@ namespace jarkt\docker\requestHandlers;
 /**
  * Class Files
  */
-class Files extends RequestHandler
+class Files extends Tar
 {
-
-	private $tarStream;
-	private $tarFilename;
-
 
 	/**
 	 * Files constructor.
@@ -29,19 +25,5 @@ class Files extends RequestHandler
 	{
 		fclose($this->tarStream);
 		unlink($this->tarFilename);
-	}
-
-	/**
-	 * @param $ch
-	 */
-	public function handle($ch)
-	{
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-type: application/x-tar',
-			'Expect:'
-		]);
-
-		curl_setopt($ch, CURLOPT_INFILESIZE, filesize($this->tarFilename));
-		curl_setopt($ch, CURLOPT_INFILE, $this->tarStream);
 	}
 }

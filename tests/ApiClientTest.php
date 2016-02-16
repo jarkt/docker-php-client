@@ -131,6 +131,30 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @depends testConnect
+	 */
+	public function testTarRequest(ApiClient $docker)
+	{
+		mkdir('/project/TEMP');
+
+		$tarFilename = tempnam(sys_get_temp_dir(), uniqid()) . '.tar';
+		$phar = new \PharData($tarFilename);
+		$phar->buildFromDirectory('/project/containers/php');
+
+		$response = $docker->put('/containers/' . getenv('HOSTNAME') . '/archive',
+			['path' => '/project/TEMP'],
+			new requestHandlers\Tar($tarFilename)
+		);
+
+		$this->assertEquals(200, $response->getStatus());
+
+		$this->assertFileExists('/project/TEMP/Dockerfile');
+
+		unlink($tarFilename);
+		exec('rm -rf /project/TEMP');
+	}
+
+	/**
+	 * @depends testConnect
 	 * @depends testJsonResponse
 	 */
 	public function testJsonRequest(ApiClient $docker, array $currentContainer)
