@@ -59,7 +59,7 @@ class Files extends ResponseHandler
 	public function extract($target)
 	{
 		if(!isset($this->target)) {
-			$this->target = tempnam(sys_get_temp_dir(), uniqid()) . '.tar';
+			$this->target = sys_get_temp_dir() . '/' . uniqid() . '.tar';
 			$this->saveTar($this->target);
 
 			$this->removeTarget = true;

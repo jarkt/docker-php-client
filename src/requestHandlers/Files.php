@@ -13,7 +13,7 @@ class Files extends Tar
 	 */
 	public function __construct($target)
 	{
-		$this->tarFilename = tempnam(sys_get_temp_dir(), uniqid()) . '.tar';
+		$this->tarFilename = sys_get_temp_dir() . '/' . uniqid() . '.tar';
 
 		$phar = new \PharData($this->tarFilename);
 		$phar->buildFromDirectory($target);

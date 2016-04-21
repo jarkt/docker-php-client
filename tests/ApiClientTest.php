@@ -136,7 +136,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 	{
 		mkdir('/project/TEMP');
 
-		$tarFilename = tempnam(sys_get_temp_dir(), uniqid()) . '.tar';
+		$tarFilename = sys_get_temp_dir() . '/' . uniqid() . '.tar';
 		$phar = new \PharData($tarFilename);
 		$phar->buildFromDirectory('/project/containers/php');
 
