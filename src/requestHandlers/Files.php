@@ -10,8 +10,9 @@ class Files extends Tar
 	/**
 	 * Files constructor.
 	 * @param $target
+	 * @param array $additionalHeaders
 	 */
-	public function __construct($target)
+	public function __construct($target, array $additionalHeaders = [])
 	{
 		$this->tarFilename = sys_get_temp_dir() . '/' . uniqid() . '.tar';
 
@@ -19,6 +20,7 @@ class Files extends Tar
 		$phar->buildFromDirectory($target);
 
 		$this->tarStream = fopen($this->tarFilename, 'r');
+		$this->additionalHeaders = $additionalHeaders;
 	}
 
 	public function __destruct()
