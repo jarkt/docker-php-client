@@ -5,7 +5,7 @@ Install via composer:
 ```json
 {
 	"require": {
-		"jarkt/docker-php-client": "0.9.*"
+		"jarkt/docker-php-client": "1.0.*"
 	}
 }
 ```
@@ -87,13 +87,13 @@ Use the environment variable HOSTNAME as the container id of your own host.
 
 # Developers
 Tests are running inside a docker container. Install all the test dependencies by going to the "containers" folder
-and type: `docker-compose -f install.yml up`
+and type: `./install.sh`
 
 Update dependencies with:
-`docker-compose -f update.yml up`
+`./update.sh`
 
 Run the tests with:
-`docker-compose up`
+`./test.sh`
 
 This will make the API available through the container
 ["jarkt/docker-remote-api"](https://github.com/jarkt/docker-remote-api) and run the tests against this endpoint.
