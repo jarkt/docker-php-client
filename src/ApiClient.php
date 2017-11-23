@@ -48,9 +48,10 @@ class ApiClient
 	 * @param $url
 	 * @param callable|null $callback
 	 * @param RequestHandler|null $requestHandler
+	 * @param array $headers
 	 * @return Response
 	 */
-	private function makeRequest($url, callable $callback = null, RequestHandler $requestHandler = null)
+	private function makeRequest($url, callable $callback = null, RequestHandler $requestHandler = null, array $headers = [])
 	{
 		$response = new Response();
 		$ch = $response->getCurlHandle();
@@ -69,7 +70,18 @@ class ApiClient
 
 		if($requestHandler instanceof RequestHandler) {
 			$requestHandler->handle($ch);
+			$headers = array_merge($requestHandler->getHeaders(), $headers);
 		}
+
+		// Clean up headers:
+		foreach($headers as $numKey => $header) {
+			$key = strtolower(substr($header, 0, strpos($header, ':')));
+			$headers[$key] = $header;
+			unset($headers[$numKey]);
+		}
+		$headers = array_values($headers);
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 		$response->waitForHeader();
 
@@ -79,75 +91,77 @@ class ApiClient
 	/**
 	 * @param $path
 	 * @param array $params
+	 * @param RequestHandler|null $requestHandler
+	 * @param array $headers
 	 * @return Response
-	 * @throws Exception
 	 */
-	public function get($path, array $params = [], RequestHandler $requestHandler = null)
+	public function get($path, array $params = [], RequestHandler $requestHandler = null, array $headers = [])
 	{
 		$url = $this->getUrl($path, $params);
-		return $this->makeRequest($url, null, $requestHandler);
+		return $this->makeRequest($url, null, $requestHandler, $headers);
 	}
 
 	/**
 	 * @param $path
 	 * @param array $params
+	 * @param RequestHandler|null $requestHandler
+	 * @param array $headers
 	 * @return Response
-	 * @throws Exception
 	 */
-	public function head($path, array $params = [], RequestHandler $requestHandler = null)
+	public function head($path, array $params = [], RequestHandler $requestHandler = null, array $headers = [])
 	{
 		$url = $this->getUrl($path, $params);
 		$callback = function($ch) {
 			curl_setopt($ch, CURLOPT_NOBODY, true);
 		};
-		return $this->makeRequest($url, $callback, $requestHandler);
+		return $this->makeRequest($url, $callback, $requestHandler, $headers);
 	}
 
 	/**
 	 * @param $path
 	 * @param array $params
 	 * @param RequestHandler|null $requestHandler
+	 * @param array $headers
 	 * @return Response
-	 * @throws \Exception
 	 */
-	public function delete($path, array $params = [], RequestHandler $requestHandler = null)
+	public function delete($path, array $params = [], RequestHandler $requestHandler = null, array $headers = [])
 	{
 		$url = $this->getUrl($path, $params);
 		$callback = function($ch) {
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		};
-		return $this->makeRequest($url, $callback, $requestHandler);
+		return $this->makeRequest($url, $callback, $requestHandler, $headers);
 	}
 
 	/**
 	 * @param $path
 	 * @param array $params
 	 * @param RequestHandler|null $requestHandler
+	 * @param array $headers
 	 * @return Response
-	 * @throws Exception
 	 */
-	public function post($path, array $params = [], RequestHandler $requestHandler = null)
+	public function post($path, array $params = [], RequestHandler $requestHandler = null, array $headers = [])
 	{
 		$url = $this->getUrl($path, $params);
 		$callback = function($ch) {
 			curl_setopt($ch, CURLOPT_POST, 1);
 		};
-		return $this->makeRequest($url, $callback, $requestHandler);
+		return $this->makeRequest($url, $callback, $requestHandler, $headers);
 	}
 
 	/**
 	 * @param $path
 	 * @param array $params
 	 * @param RequestHandler|null $requestHandler
+	 * @param array $headers
 	 * @return Response
-	 * @throws Exception
 	 */
-	public function put($path, array $params = [], RequestHandler $requestHandler = null)
+	public function put($path, array $params = [], RequestHandler $requestHandler = null, array $headers = [])
 	{
 		$url = $this->getUrl($path, $params);
 		$callback = function($ch) {
 			curl_setopt($ch, CURLOPT_PUT, 1);
 		};
-		return $this->makeRequest($url, $callback, $requestHandler);
+		return $this->makeRequest($url, $callback, $requestHandler, $headers);
 	}
 }

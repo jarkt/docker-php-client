@@ -24,7 +24,14 @@ class Json extends RequestHandler
 	 */
 	public function handle($ch)
 	{
-		curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/json']);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($this->data));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getHeaders()
+	{
+		return ['Content-type: application/json'];
 	}
 }

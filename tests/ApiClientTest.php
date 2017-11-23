@@ -1,12 +1,12 @@
 <?php
 namespace jarkt\docker;
 
-class ApiClientTest extends \PHPUnit_Framework_TestCase
+class ApiClientTest extends \PHPUnit\Framework\TestCase
 {
 
 	public function testConnect()
 	{
-		$docker = new ApiClient(getenv('API_PORT_2375_TCP_ADDR'), getenv('API_PORT_2375_TCP_PORT'), 'v1.21');
+		$docker = new ApiClient('dockerremoteapi', '2375', 'v1.21');
 
 		$this->assertTrue($docker instanceof ApiClient);
 
@@ -41,7 +41,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 			error_log($log); // TODO: Be quiet!
 		}
 
-		$response = $docker->get('/containers/containers_php_1/logs', [
+		$response = $docker->get('/containers/dockerphpclient/logs', [
 			'follow' => 'false',
 			'stdout' => 'true',
 			'stderr' => 'true',
@@ -52,14 +52,11 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(200, $response->getStatus());
 
-		$count = 0;
 		$responseHandler = new responseHandlers\Logs($response);
-		while(($line = $responseHandler->getLine()) !== false) {
-			$this->assertStringEndsWith($logs[$count], $line);
-			$count++;
+		for($i = 0; $i <= 2; $i++) {
+			$line = $responseHandler->getLine();
+			$this->assertStringEndsWith($logs[$i], $line);
 		}
-
-		$this->assertEquals(3, $count);
 	}
 
 	/**

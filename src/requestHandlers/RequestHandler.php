@@ -12,4 +12,12 @@ abstract class RequestHandler
 	 * @return mixed
 	 */
 	abstract public function handle($ch);
+
+	/**
+	 * @return array
+	 */
+	public function getHeaders()
+	{
+		return [];
+	}
 }
