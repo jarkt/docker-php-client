@@ -32,6 +32,9 @@ class Json extends RequestHandler
 	 */
 	public function getHeaders()
 	{
-		return ['Content-type: application/json'];
+		return [
+			'Content-type: application/json',
+			'Expect:'
+		];
 	}
 }
