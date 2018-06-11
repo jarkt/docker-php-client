@@ -32,6 +32,14 @@ class ResponseHandler
 	}
 
 	/**
+	 * @return Response
+	 */
+	public function getResponse()
+	{
+		return $this->response;
+	}
+
+	/**
 	 * @param null $key
 	 * @return array
 	 */
