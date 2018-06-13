@@ -26,7 +26,13 @@ class JsonStream extends Json
 		if ($breakPoint) {
 			$json = substr($this->puffer, 0, $breakPoint);
 			$this->puffer = substr($this->puffer, $breakPoint + 1);
-			return json_decode($json, true);
+			$rtn = json_decode($json, true);
+
+			if (($error = json_last_error()) !== JSON_ERROR_NONE) {
+				throw new \jarkt\docker\exceptions\InvalidJson(sprintf("Error %s on json_decode. JSON: %s", $error, $json));
+			}
+
+			return $rtn;
 		}
 
 		return null;
